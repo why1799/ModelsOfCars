@@ -31,7 +31,7 @@ namespace ModelsOfCars.Storage.PostgresImplementations
             using var command = connection.CreateCommand();
             command.CommandText = @$"
 INSERT INTO cars (id, brand_id, model, body_type_id, seats_count, url) 
-VALUES('{car.Id}', '{car.BrandId}', '{car.Model}', '{car.BodyTypeId}', {car.SeatsCount}, '{car.Url}'); ";
+VALUES('{car.Id}', '{car.BrandId}', '{car.Model}', '{car.BodyTypeId}', {car.SeatsCount}" + (string.IsNullOrEmpty(car.Url) ? "" : $", '{car.Url}'") + ");";
 
             await command.ExecuteNonQueryAsync().ConfigureAwait(false);
 
