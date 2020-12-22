@@ -24,7 +24,7 @@ namespace ModelsOfCars.Storage.PostgresImplementations
                 {
                     await connection.OpenAsync().ConfigureAwait(false);
 
-                    var command = connection.CreateCommand();
+                    using var command = connection.CreateCommand();
                    
                     command.CommandText = @"
                     DROP TABLE IF EXISTS cars;
@@ -70,6 +70,7 @@ namespace ModelsOfCars.Storage.PostgresImplementations
                     ); ";
 
                     await command.ExecuteNonQueryAsync().ConfigureAwait(false);
+                    await connection.CloseAsync().ConfigureAwait(false);
                 }
 
                 await _firstStart.UpdateAppsettingsAsync();

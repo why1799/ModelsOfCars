@@ -1,10 +1,11 @@
 ﻿using ModelsOfCars.Contracts;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ModelsOfCars.Storage.Interfaces
 {
     public interface IBodyTypeStorage
     {
-        Task<Car> GetAllAsync(Paging paging);
+        Task<IList<BodyType>> GetAllAsync();
     }
 }

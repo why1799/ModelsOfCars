@@ -17,6 +17,7 @@ namespace ModelsOfCars.Storage.PostgresImplementations
         public CarStorage(IDbConnectionConfig dbConnection, IStorageInit storageInit) : base(storageInit)
         {
             _dbConnection = dbConnection;
+            BeginInitDataBase().Wait();
         }
         public Task<Car> GetAllAsync(Paging paging)
         {

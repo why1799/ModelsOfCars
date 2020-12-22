@@ -5,22 +5,27 @@ using ModelsOfCars.Tests.Helper.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace ModelsOfCars.Storage.Tests
 {
     public class BodyTypeStorageTests
     {
-        private readonly IBodyTypeStorage _carStorage;
+        private readonly IBodyTypeStorage _bodyTypeStorage;
         public BodyTypeStorageTests()
         {
-            _carStorage = InitHelper.GetServiceCollection().GetRequiredService<IBodyTypeStorage>();
+            _bodyTypeStorage = InitHelper.GetServiceCollection().GetRequiredService<IBodyTypeStorage>();
         }
 
-        //[Fact]
         [FactRunnableInDebugOnly]
-        public void InitTest()
+        public async Task GetAllAsyncTest()
         {
+            var expected = 5;
 
+            var actual = await _bodyTypeStorage.GetAllAsync();
+
+            Assert.Equal(expected, actual.Count);
         }
     }
 }
