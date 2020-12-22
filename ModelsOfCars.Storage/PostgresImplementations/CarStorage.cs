@@ -1,12 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
-using ModelsOfCars.Contracts;
-using ModelsOfCars.Contracts.Configuration;
+﻿using ModelsOfCars.Contracts;
 using ModelsOfCars.Contracts.Configuration.Interfaces;
 using ModelsOfCars.Storage.Interfaces;
 using Npgsql;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ModelsOfCars.Storage.PostgresImplementations
@@ -174,7 +171,7 @@ WHERE cars.id = '{id}';";
 
         #endregion
 
-        #region CHECKONEXISTS
+        #region CHECK ON EXISTS
         public async Task<bool> CheckOnExistWithTheSameParametrs(Car car)
         {
             var found = false;
