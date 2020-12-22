@@ -9,20 +9,20 @@ using Xunit;
 
 namespace ModelsOfCars.Storage.Tests
 {
-    public class BodyTypeStorageTests
+    public class BrandStorageTests
     {
-        private readonly IBodyTypeStorage _bodyTypeStorage;
-        public BodyTypeStorageTests()
+        private readonly IBrandStorage _brandStorage;
+        public BrandStorageTests()
         {
-            _bodyTypeStorage = InitHelper.GetServiceCollection().GetRequiredService<IBodyTypeStorage>();
+            _brandStorage = InitHelper.GetServiceCollection().GetRequiredService<IBrandStorage>();
         }
 
         [FactRunnableInDebugOnly]
         public async Task GetAllAsyncTest()
         {
-            var expected = new List<string> { "Седан", "Хэтчбек", "Универсал", "Минивэн", "Внедорожник", "Купе" };
+            var expected = new List<string> { "Audi", "Ford", "Jeep", "Nissan", "Toyota" };
 
-            var actual = await _bodyTypeStorage.GetAllAsync();
+            var actual = await _brandStorage.GetAllAsync();
 
             Assert.Equal(expected, actual.Select(x => x.Name));
         }

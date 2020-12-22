@@ -74,6 +74,7 @@ namespace ModelsOfCars.Storage.PostgresImplementations
                 }
 
                 await _firstStart.UpdateAppsettingsAsync();
+                _firstStart.InitDataBase = false;
             }
         }
     }

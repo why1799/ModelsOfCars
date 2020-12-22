@@ -47,8 +47,8 @@ namespace ModelsOfCars
             services.AddSingleton(typeof(IStorageInit), typeof(StorageInit));
             services.AddSingleton(typeof(ICarStorage), typeof(CarStorage));
             services.AddSingleton(typeof(IBodyTypeStorage), typeof(BodyTypeStorage));
+            services.AddSingleton(typeof(IBrandStorage), typeof(BrandStorage));
         }
-        
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
