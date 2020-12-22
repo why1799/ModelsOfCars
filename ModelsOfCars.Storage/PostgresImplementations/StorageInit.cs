@@ -61,7 +61,7 @@ namespace ModelsOfCars.Storage.PostgresImplementations
                         brand_id UUID,
                         FOREIGN KEY(brand_id) REFERENCES brands(id),
                         model VARCHAR(1000) NOT NULL,
-                        creation_date TIMESTAMP NOT NULL DEFAULT current_timestamp,
+                        creation_date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
                         body_type_id UUID,
                         FOREIGN KEY(body_type_id) REFERENCES body_types(id),
                         base64_photo BYTEA,
