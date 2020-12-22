@@ -3,7 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelsOfCars", "ModelsOfCars\ModelsOfCars.csproj", "{5A5EDDF2-D80B-4338-8A2A-F0BB7125F1DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelsOfCars", "ModelsOfCars\ModelsOfCars.csproj", "{5A5EDDF2-D80B-4338-8A2A-F0BB7125F1DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelsOfCars.Storage", "ModelsOfCars.Storage\ModelsOfCars.Storage.csproj", "{CD4E9134-DAB0-4ACA-827A-21FBDA574DD3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelsOfCars.Contracts", "ModelsOfCars.Models\ModelsOfCars.Contracts.csproj", "{5D40024A-44DC-4FA7-A032-B56A5A4D8107}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{85EA6303-AF70-4B69-A162-89AAAA781F26}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelsOfCars.Tests.Helper", "Tests\ModelsOfCars.Tests.Helper\ModelsOfCars.Tests.Helper.csproj", "{B88EC0BB-8BCC-4A93-9DDD-63F56AD9CB1A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelsOfCars.Storage.Tests", "Tests\ModelsOfCars.Storage.Tests\ModelsOfCars.Storage.Tests.csproj", "{5A9C17A4-CF3C-450D-94DA-2F86DA5691D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +25,29 @@ Global
 		{5A5EDDF2-D80B-4338-8A2A-F0BB7125F1DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A5EDDF2-D80B-4338-8A2A-F0BB7125F1DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A5EDDF2-D80B-4338-8A2A-F0BB7125F1DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD4E9134-DAB0-4ACA-827A-21FBDA574DD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD4E9134-DAB0-4ACA-827A-21FBDA574DD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD4E9134-DAB0-4ACA-827A-21FBDA574DD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD4E9134-DAB0-4ACA-827A-21FBDA574DD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D40024A-44DC-4FA7-A032-B56A5A4D8107}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D40024A-44DC-4FA7-A032-B56A5A4D8107}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D40024A-44DC-4FA7-A032-B56A5A4D8107}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D40024A-44DC-4FA7-A032-B56A5A4D8107}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B88EC0BB-8BCC-4A93-9DDD-63F56AD9CB1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B88EC0BB-8BCC-4A93-9DDD-63F56AD9CB1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B88EC0BB-8BCC-4A93-9DDD-63F56AD9CB1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B88EC0BB-8BCC-4A93-9DDD-63F56AD9CB1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A9C17A4-CF3C-450D-94DA-2F86DA5691D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A9C17A4-CF3C-450D-94DA-2F86DA5691D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A9C17A4-CF3C-450D-94DA-2F86DA5691D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A9C17A4-CF3C-450D-94DA-2F86DA5691D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B88EC0BB-8BCC-4A93-9DDD-63F56AD9CB1A} = {85EA6303-AF70-4B69-A162-89AAAA781F26}
+		{5A9C17A4-CF3C-450D-94DA-2F86DA5691D8} = {85EA6303-AF70-4B69-A162-89AAAA781F26}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {10AF4E1A-1122-47B1-967B-3AD95A7BB4FE}
