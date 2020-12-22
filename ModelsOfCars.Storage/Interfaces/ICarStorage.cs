@@ -11,12 +11,13 @@ namespace ModelsOfCars.Storage.Interfaces
 
         Task<IList<Car>> GetAllAsync(Paging paging);
 
-        Task<Car> Create(Car car);
+        Task<Guid> Create(Car car);
 
-        Task<Car> Update(Car car);
+        Task<Guid> Update(Car car);
 
-        Task<Guid> Delete(Guid id);
+        Task<int> Delete(Guid id);
 
-        Task<bool> CheckOnExist(Car car);
+        Task<bool> CheckOnExistWithTheSameParametrs(Car car);
+        Task<uint> GetCount();
     }
 }

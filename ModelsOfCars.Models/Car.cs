@@ -11,8 +11,8 @@ namespace ModelsOfCars.Contracts
         public DateTimeOffset CreationDate { get; set; }
         public Guid BodyTypeId { get; set; }
         public string BodyTypeName { get; set; }
-        public int SeatsCount { get; set; }
+        public uint SeatsCount { get; set; }
         public string Url { get; set; }
-        public byte[] Photo { get; set; }
+        public string PhotoBase64 { get; set; }
     }
 }

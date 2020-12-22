@@ -2,6 +2,6 @@
 {
     public class PageInfo : Paging
     {
-        public int Total { get; set; }
+        public uint TotalPages { get; set; }
     }
 }
