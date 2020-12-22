@@ -4,6 +4,6 @@ namespace ModelsOfCars.Storage.Interfaces
 {
     public interface IStorageInit
     {
-        Task BeginInit();
+        Task BeginInitAsync();
     }
 }

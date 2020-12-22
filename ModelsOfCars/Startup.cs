@@ -6,7 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using ModelsOfCars.Contracts;
+using ModelsOfCars.Contracts.Configuration;
+using ModelsOfCars.Contracts.Configuration.Interfaces;
 using ModelsOfCars.Storage.Interfaces;
 using ModelsOfCars.Storage.PostgresImplementations;
 using System;
@@ -40,8 +41,10 @@ namespace ModelsOfCars
 
             services.AddSingleton(Configuration);
 
-            services.AddTransient(_ => Configuration.GetSection("DbConnection").Get<DbConnection>());
+            services.AddTransient<IDbConnectionConfig>(_ => Configuration.GetSection("DbConnection").Get<DbConnectionConfig>());
+            services.AddTransient<IFirstStart>(_ => Configuration.GetSection(FirstStart.Section).Get<FirstStart>());
 
+            services.AddSingleton(typeof(IStorageInit), typeof(StorageInit));
             services.AddSingleton(typeof(ICarStorage), typeof(CarStorage));
             services.AddSingleton(typeof(IBodyTypeStorage), typeof(BodyTypeStorage));
         }

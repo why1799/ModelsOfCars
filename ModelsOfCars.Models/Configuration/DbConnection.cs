@@ -1,6 +1,8 @@
-﻿namespace ModelsOfCars.Contracts
+﻿using ModelsOfCars.Contracts.Configuration.Interfaces;
+
+namespace ModelsOfCars.Contracts.Configuration
 {
-    public class DbConnection
+    public class DbConnectionConfig : IDbConnectionConfig
     {
         public string Host { get; set; }
         public int Port { get; set; }
