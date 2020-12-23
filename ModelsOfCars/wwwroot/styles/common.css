@@ -1,0 +1,26 @@
+﻿body {
+    width: 550px;
+    margin-top: 2em;
+}
+
+.carshead {
+    display: flex;
+    margin-bottom: 1em;
+    justify-content: space-between;
+}
+
+.carsname {
+    margin-bottom: 0em;
+    margin-top: 0em;
+}
+
+.add {
+    width: 25px;
+    height: 25px;
+    margin-top: 0.7em;
+}
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
+}

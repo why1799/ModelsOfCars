@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Просмотр машин</title>
+</head>
+<body class="center">
+    <link rel="stylesheet" type="text/css" href="Styles/Common.css" />
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+
+    <div class="carshead">
+        <h1 class="carsname">Добавленные машины:</h1>
+        <input title="Добавить машину" type="image" class="add" src="/images/add.png" onclick="addCar()">
+    </div>
+
+    <div id="cars_list"></div>
+    <!-- We will put our React component inside this div. -->
+    <!--<div id="like_button_container"></div>-->
+    <!--<div id="root"></div>-->
+    <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+    <script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
+
+    <script src="js/cars_list.js"></script>
+</body>
+</html>
