@@ -28,10 +28,16 @@ namespace ModelsOfCars.Storage.PostgresImplementations
 
             car.Id = Guid.NewGuid();
 
+            string base64 = null;
+            if (car.PhotoBase64 != null)
+            {
+                base64 = car.PhotoBase64[(car.PhotoBase64.IndexOf("base64,") + 7)..];
+            }
+
             using var command = connection.CreateCommand();
             command.CommandText = @$"
-INSERT INTO cars (id, brand_id, model, body_type_id, seats_count, url) 
-VALUES('{car.Id}', '{car.BrandId}', '{car.Model}', '{car.BodyTypeId}', {car.SeatsCount}" + (string.IsNullOrEmpty(car.Url) ? "" : $", '{car.Url}'") + ");";
+INSERT INTO cars (id, brand_id, model, body_type_id, seats_count, photo" + (string.IsNullOrEmpty(car.Url) ? "" : ", url") + @$") 
+VALUES('{car.Id}', '{car.BrandId}', '{car.Model}', '{car.BodyTypeId}', {car.SeatsCount}, decode('{base64}', 'base64')" + (string.IsNullOrEmpty(car.Url) ? "" : $", '{car.Url}'") + ");";
 
             await command.ExecuteNonQueryAsync().ConfigureAwait(false);
 
@@ -118,7 +124,7 @@ LIMIT  {paging.Size}";
             await connection.OpenAsync().ConfigureAwait(false);
 
             using var command = connection.CreateCommand();
-            command.CommandText = $@"SELECT cars.id, cars.brand_id, brands.name as brand_name, cars.model, cars.creation_date, cars.body_type_id, body_types.name as body_type_name, cars.seats_count, cars.url, cars.base64_photo
+            command.CommandText = $@"SELECT cars.id, cars.brand_id, brands.name as brand_name, cars.model, cars.creation_date, cars.body_type_id, body_types.name as body_type_name, cars.seats_count, cars.url, encode(cars.photo, 'base64')
 FROM cars
 LEFT JOIN brands on cars.brand_id = brands.id
 LEFT JOIN body_types on cars.body_type_id = body_types.id
@@ -147,6 +153,11 @@ WHERE cars.id = '{id}';";
                     };
                 }
             }
+            
+            if(!string.IsNullOrEmpty(car.PhotoBase64))
+            {
+                car.PhotoBase64 = $"data:image/jpeg;base64,{car.PhotoBase64}";
+            }
 
             return car;
         }
@@ -155,9 +166,25 @@ WHERE cars.id = '{id}';";
 
         #region UPDATE
 
-        public Task<Guid> Update(Car car)
+        public async Task<Guid> Update(Car car)
         {
-            throw new NotImplementedException();
+            using var connection = new NpgsqlConnection(_dbConnection.ToString());
+
+            string base64 = null;
+            if(!string.IsNullOrEmpty(car.PhotoBase64))
+            {
+                base64 = car.PhotoBase64[(car.PhotoBase64.IndexOf("base64,") + 7)..];
+            }
+
+            await connection.OpenAsync().ConfigureAwait(false);
+            using var command = connection.CreateCommand();
+            command.CommandText = @$"
+UPDATE cars SET brand_id = '{car.BrandId}', model = '{car.Model}', body_type_id = '{car.BodyTypeId}', seats_count = {car.SeatsCount}, photo = decode('{base64}', 'base64'), url = " + (string.IsNullOrEmpty(car.Url) ? "NULL" : $"'{car.Url}'") + $@" 
+WHERE id = '{car.Id}';";
+
+            await command.ExecuteNonQueryAsync().ConfigureAwait(false);
+
+            return car.Id;
         }
 
         #endregion
@@ -184,7 +211,7 @@ WHERE cars.id = '{id}';";
             command.CommandText = @$"
 SELECT COUNT(*)
 FROM cars
-WHERE brand_id = '{car.BrandId}' AND model = '{car.Model}' AND body_type_id = '{car.BodyTypeId}' AND seats_count = {car.SeatsCount};";
+WHERE id != '{car.Id}' AND brand_id = '{car.BrandId}' AND model = '{car.Model}' AND body_type_id = '{car.BodyTypeId}' AND seats_count = {car.SeatsCount};";
 
             using NpgsqlDataReader reader = command.ExecuteReader();
 

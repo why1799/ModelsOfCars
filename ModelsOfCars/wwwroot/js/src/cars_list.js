@@ -1,5 +1,7 @@
 ﻿const size = 10;
 
+import { CarItem } from '/js/car_item.js';
+
 class CarsList extends React.Component {
     constructor(props) {
         super(props);
@@ -7,7 +9,8 @@ class CarsList extends React.Component {
             error: null,
             isLoaded: false,
             page: 0,
-            items: []
+            response: [],
+            pageInfo: null
         };
     }
 
@@ -18,31 +21,25 @@ class CarsList extends React.Component {
         $.ajax({
             url: "api/Cars/GetAll?Size=" + size + "&Current=" + this.state.page,
             success: function (data) {
-                current.state.items = data.response;
+                current.setState(() => {
+                    return { isLoaded: true, response: data.response, pageInfo: data.pageInfo }
+                });
             }
-        }).done(function () {
-            current.setState((isLoaded) => {
-                return { isLoaded: true }
-            });
         });
     }
 
     render() {
-        const { error, isLoaded, page, items } = this.state;
+        const { error, isLoaded, page, response, pageInfo } = this.state;
         if (error) {
             return <div>Ошибка: {error.message}</div>;
         } else if (!isLoaded) {
+            //Добавить крутящийся кружок
             return <div>Загрузка...</div>;
-        } else {
+        } else { 
             return (
-                <ul>
-                    {items.map(item => (
-                        <li key={item.id}>
-                            {item.name} {item.price}
-                        </li>
-                    ))}
-                </ul>
-            );
+                response.map(item => (
+                    <CarItem value={item} key={item.id} current_state={0}/>
+                )) );
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿body {
-    width: 550px;
+    width: 510px;
     margin-top: 2em;
 }
 
-.carshead {
+.carsheadadding {
     display: flex;
     margin-bottom: 1em;
     justify-content: space-between;
@@ -23,4 +23,93 @@
 .center {
     margin-left: auto;
     margin-right: auto;
+}
+
+.cartext {
+    margin-left: 2em;
+}
+
+.car {
+    border-color: lightgrey;
+    border-style: inset;
+    border-width: 2px;
+    padding: 1em;
+    margin-bottom: 1em;
+    border-radius: 30px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+.carhead {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.carname {
+    font-size: 25px;
+}
+
+.cardesc {
+    display: inline-block;
+    margin-top: 1em;
+}
+
+.iconsintriphead {
+    width: 70px;
+}
+
+.caricons {
+    height: 25px;
+    width: 25px;
+    margin: 0.2em;
+    cursor: pointer;
+}
+
+.inputline {
+    border: none;
+    border-bottom: lightgrey solid 1px;
+}
+
+.editorcreate {
+    margin-top: 0.6em;
+    width: 240px;
+}
+
+.photowrapper {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+}
+
+    .photowrapper .removephoto {
+        height: 12px;
+        width: 12px;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        visibility: hidden;
+        cursor: pointer;
+    }
+
+    .photowrapper .addphoto {
+        height: 80%;
+        width: 80%;
+        position: absolute;
+        top: 10%;
+        left: 10%;
+        visibility: hidden;
+        cursor: pointer;
+    }
+
+    .photowrapper:hover .withphoto + .removephoto {
+        visibility: visible;
+    }
+
+    .photowrapper:hover .addphoto {
+        visibility: visible;
+    }
+
+.uploader {
+    display: none;
 }

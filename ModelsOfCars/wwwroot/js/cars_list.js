@@ -8,6 +8,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var size = 10;
 
+import { CarItem } from '/js/car_item.js';
+
 var CarsList = function (_React$Component) {
     _inherits(CarsList, _React$Component);
 
@@ -20,7 +22,8 @@ var CarsList = function (_React$Component) {
             error: null,
             isLoaded: false,
             page: 0,
-            items: []
+            response: [],
+            pageInfo: null
         };
         return _this;
     }
@@ -34,12 +37,10 @@ var CarsList = function (_React$Component) {
             $.ajax({
                 url: "api/Cars/GetAll?Size=" + size + "&Current=" + this.state.page,
                 success: function success(data) {
-                    current.state.items = data.response;
+                    current.setState(function () {
+                        return { isLoaded: true, response: data.response, pageInfo: data.pageInfo };
+                    });
                 }
-            }).done(function () {
-                current.setState(function (isLoaded) {
-                    return { isLoaded: true };
-                });
             });
         }
     }, {
@@ -49,7 +50,8 @@ var CarsList = function (_React$Component) {
                 error = _state.error,
                 isLoaded = _state.isLoaded,
                 page = _state.page,
-                items = _state.items;
+                response = _state.response,
+                pageInfo = _state.pageInfo;
 
             if (error) {
                 return React.createElement(
@@ -59,25 +61,16 @@ var CarsList = function (_React$Component) {
                     error.message
                 );
             } else if (!isLoaded) {
+                //Добавить крутящийся кружок
                 return React.createElement(
                     "div",
                     null,
                     "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430..."
                 );
             } else {
-                return React.createElement(
-                    "ul",
-                    null,
-                    items.map(function (item) {
-                        return React.createElement(
-                            "li",
-                            { key: item.id },
-                            item.name,
-                            " ",
-                            item.price
-                        );
-                    })
-                );
+                return response.map(function (item) {
+                    return React.createElement(CarItem, { value: item, key: item.id, current_state: 0 });
+                });
             }
         }
     }]);

@@ -116,12 +116,13 @@ namespace ModelsOfCars.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
-        public async Task<ActionResult> CheckOnExistWithTheSameParametrs(Guid brandId, string model, Guid bodyTypeId, uint seatsCount)
+        public async Task<ActionResult> CheckOnExistWithTheSameParametrs(Guid id, Guid brandId, string model, Guid bodyTypeId, uint seatsCount)
         {
             try
             {
                 var car = new Car
                 {
+                    Id = id,
                     BrandId = brandId,
                     Model = model,
                     BodyTypeId = bodyTypeId,

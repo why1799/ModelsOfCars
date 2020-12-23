@@ -64,9 +64,9 @@ namespace ModelsOfCars.Storage.PostgresImplementations
                         creation_date TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
                         body_type_id UUID,
                         FOREIGN KEY(body_type_id) REFERENCES body_types(id),
-                        base64_photo BYTEA,
+                        photo BYTEA,
                         seats_count int NOT NULL CHECK(seats_count >= 1 AND seats_count <= 12),
-                        url VARCHAR(1000) NOT NULL
+                        url VARCHAR(1000)
                     ); ";
 
                     await command.ExecuteNonQueryAsync().ConfigureAwait(false);
