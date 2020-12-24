@@ -4,6 +4,7 @@ using ModelsOfCars.Contracts;
 using ModelsOfCars.Storage.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace ModelsOfCars.Controllers
@@ -37,6 +38,12 @@ namespace ModelsOfCars.Controllers
                 if(await _carStorage.CheckOnExistWithTheSameParametrs(car).ConfigureAwait(false))
                 {
                     return StatusCode(StatusCodes.Status409Conflict, "Машина с данными параметрами уже существует");
+                }
+
+                car.Url = car.Url?.Trim();
+                if (!string.IsNullOrEmpty(car.Url) && !IsUrlInRu(car.Url))
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest, "Ссылка не находится в домене .ru");
                 }
 
                 var response = await _carStorage.Create(car).ConfigureAwait(false);
@@ -162,6 +169,12 @@ namespace ModelsOfCars.Controllers
                     return StatusCode(StatusCodes.Status409Conflict, "Машина с данными параметрами уже существует");
                 }
 
+                car.Url = car.Url?.Trim();
+                if (!string.IsNullOrEmpty(car.Url) && !IsUrlInRu(car.Url))
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest, "Ссылка не находится в домене .ru");
+                }
+
                 var response = await _carStorage.Update(car).ConfigureAwait(false);
 
                 return StatusCode(StatusCodes.Status200OK, response);
@@ -201,6 +214,20 @@ namespace ModelsOfCars.Controllers
         {
             public IList<Car> Response { get; set; }
             public PageInfo PageInfo { get; set; }
+        }
+
+        #endregion
+
+        #region PRIVATE METHODS
+
+        private bool IsUrlInRu(string url)
+        {
+            var pattern = @"^\S+[.]ru[/]|(^\S+[.]ru$)";
+
+            Regex regex = new Regex(pattern);
+            MatchCollection matches = regex.Matches(url);
+
+            return matches.Count == 1;
         }
 
         #endregion
