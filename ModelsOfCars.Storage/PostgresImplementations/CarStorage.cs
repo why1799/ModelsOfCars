@@ -1,4 +1,5 @@
-﻿using ModelsOfCars.Contracts;
+﻿using Microsoft.Extensions.Logging;
+using ModelsOfCars.Contracts;
 using ModelsOfCars.Contracts.Configuration.Interfaces;
 using ModelsOfCars.Storage.Interfaces;
 using Npgsql;
@@ -11,10 +12,12 @@ namespace ModelsOfCars.Storage.PostgresImplementations
     public class CarStorage : CommonStorage, ICarStorage
     {
         private readonly IDbConnectionConfig _dbConnection;
+        private readonly ILogger<CarStorage> _logger;
 
-        public CarStorage(IDbConnectionConfig dbConnection, IStorageInit storageInit) : base(storageInit)
+        public CarStorage(ILogger<CarStorage> logger, IDbConnectionConfig dbConnection, IStorageInit storageInit) : base(storageInit)
         {
             _dbConnection = dbConnection;
+            _logger = logger;
             BeginInitDataBase().Wait();
         }
 
@@ -47,6 +50,8 @@ VALUES('{car.Id}', '{car.BrandId}', '{car.Model}', '{car.BodyTypeId}', {car.Seat
             {
                 throw new ArgumentException("Такой машины в базе не существует.");
             }
+
+            _logger.LogInformation($"Добавление Brand: '{carFromDb.BrandName}', Model: '{carFromDb.Model}'");
 
             return carFromDb.Id;
         }
@@ -198,6 +203,8 @@ WHERE id = '{car.Id}';";
                 throw new ArgumentException("Такой машины в базе не существует.");
             }
 
+            _logger.LogInformation($"Редактирование Brand: '{carFromDb.BrandName}', Model: '{carFromDb.Model}'");
+
             return carFromDb.Id;
         }
 
@@ -232,6 +239,8 @@ WHERE id = '{id}';";
             {
                 throw new ArgumentException("Такой машины в базе не существует.");
             }
+
+            _logger.LogInformation($"Удаление Brand: '{car.BrandName}', Model: '{car.Model}'");
 
             return rows;
         }
