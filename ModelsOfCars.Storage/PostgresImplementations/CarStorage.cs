@@ -41,7 +41,14 @@ VALUES('{car.Id}', '{car.BrandId}', '{car.Model}', '{car.BodyTypeId}', {car.Seat
 
             await command.ExecuteNonQueryAsync().ConfigureAwait(false);
 
-            return car.Id;
+            var carFromDb = await GetCarBrandAndModelAsync(command, car.Id).ConfigureAwait(false);
+
+            if (carFromDb == null)
+            {
+                throw new ArgumentException("Такой машины в базе не существует.");
+            }
+
+            return carFromDb.Id;
         }
 
         #endregion
@@ -184,7 +191,14 @@ WHERE id = '{car.Id}';";
 
             await command.ExecuteNonQueryAsync().ConfigureAwait(false);
 
-            return car.Id;
+            var carFromDb = await GetCarBrandAndModelAsync(command, car.Id).ConfigureAwait(false);
+
+            if (carFromDb == null)
+            {
+                throw new ArgumentException("Такой машины в базе не существует.");
+            }
+
+            return carFromDb.Id;
         }
 
         #endregion
@@ -193,32 +207,17 @@ WHERE id = '{car.Id}';";
 
         public async Task<int> Delete(Guid id)
         {
-            var found = false;
-
             using var connection = new NpgsqlConnection(_dbConnection.ToString());
 
             await connection.OpenAsync().ConfigureAwait(false);
 
             using var command = connection.CreateCommand();
-            command.CommandText = @$"
-SELECT COUNT(*)
-FROM cars
-WHERE id = '{id}';";
 
-            using (NpgsqlDataReader reader = command.ExecuteReader())
+            var car = await GetCarBrandAndModelAsync(command, id).ConfigureAwait(false);
+
+            if (car == null)
             {
-                if (reader.HasRows)
-                {
-                    while (await reader.ReadAsync().ConfigureAwait(false))
-                    {
-                        found = int.Parse(reader.GetValue(0).ToString()) != 0;
-                    }
-                }
-
-                if (!found)
-                {
-                    throw new ArgumentException("Такой записи в базе не существует.");
-                }
+                throw new ArgumentException("Такой машины в базе не существует.");
             }
 
             command.CommandText = @$"
@@ -231,7 +230,7 @@ WHERE id = '{id}';";
 
             if (rows == 0)
             {
-                throw new ArgumentException("Такой записи в базе не существует.");
+                throw new ArgumentException("Такой машины в базе не существует.");
             }
 
             return rows;
@@ -264,9 +263,41 @@ WHERE id != '{car.Id}' AND brand_id = '{car.BrandId}' AND model = '{car.Model}' 
                     found = int.Parse(reader.GetValue(0).ToString()) != 0;
                 }
             }
-
             return found;
         }
+        #endregion
+
+        #region PRIVATE METHODS
+
+        private async Task<Car> GetCarBrandAndModelAsync(NpgsqlCommand command, Guid id)
+        {
+            command.CommandText = @$"
+SELECT cars.id, brands.name as brand_name, cars.model
+FROM cars
+LEFT JOIN brands on cars.brand_id = brands.id
+WHERE cars.id = '{id}';";
+
+            Car car = null;
+
+            using (NpgsqlDataReader reader = command.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+                    while (await reader.ReadAsync().ConfigureAwait(false))
+                    {
+                        car = new Car
+                        {
+                            Id = new Guid(reader.GetValue(0).ToString()),
+                            BrandName = reader.GetValue(1).ToString(),
+                            Model = reader.GetValue(2).ToString()
+                        };
+                    }
+                }
+            }
+
+            return car;
+        }
+
         #endregion
     }
 }
