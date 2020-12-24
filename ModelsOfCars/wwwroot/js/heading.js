@@ -6,25 +6,46 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-export var CarLoad = function (_React$Component) {
-    _inherits(CarLoad, _React$Component);
+export var Heading = function (_React$Component) {
+    _inherits(Heading, _React$Component);
 
-    function CarLoad(props) {
-        _classCallCheck(this, CarLoad);
+    function Heading(props) {
+        _classCallCheck(this, Heading);
 
-        return _possibleConstructorReturn(this, (CarLoad.__proto__ || Object.getPrototypeOf(CarLoad)).call(this, props));
+        var _this = _possibleConstructorReturn(this, (Heading.__proto__ || Object.getPrototypeOf(Heading)).call(this, props));
+
+        _this.state = {
+            parent: props.parent
+        };
+        return _this;
     }
 
-    _createClass(CarLoad, [{
+    _createClass(Heading, [{
+        key: "add",
+        value: function add() {
+            this.state.parent.setState(function () {
+                return { isLoaded: false, page: 0, create: true };
+            });
+        }
+    }, {
         key: "render",
         value: function render() {
+            var _this2 = this;
+
             return React.createElement(
                 "div",
-                { className: "car carhead" },
-                React.createElement("img", { src: "/images/loader.gif", className: "center", width: "110" })
+                { className: "carsheadadding" },
+                React.createElement(
+                    "h1",
+                    { className: "carsname" },
+                    "\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u043D\u044B\u0435 \u043C\u0430\u0448\u0438\u043D\u044B:"
+                ),
+                React.createElement("img", { title: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043C\u0430\u0448\u0438\u043D\u0443", className: "add", src: "/images/add.png", onClick: function onClick() {
+                        return _this2.add();
+                    } })
             );
         }
     }]);
 
-    return CarLoad;
+    return Heading;
 }(React.Component);

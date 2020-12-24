@@ -9,42 +9,43 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 import { CarLoad } from '/js/car_load.js';
 import * as Common from '/js/common.js';
 
-export var CarEdit = function (_React$Component) {
-    _inherits(CarEdit, _React$Component);
+export var CarCreate = function (_React$Component) {
+    _inherits(CarCreate, _React$Component);
 
-    function CarEdit(props) {
-        _classCallCheck(this, CarEdit);
+    function CarCreate(props) {
+        _classCallCheck(this, CarCreate);
 
-        var _this = _possibleConstructorReturn(this, (CarEdit.__proto__ || Object.getPrototypeOf(CarEdit)).call(this, props));
+        var _this = _possibleConstructorReturn(this, (CarCreate.__proto__ || Object.getPrototypeOf(CarCreate)).call(this, props));
 
         _this.triggerInputFile = function () {
             return _this.fileInput.click();
         };
 
+        var val = {
+            id: null
+        };
+
         _this.state = {
-            value: props.parent.state.value,
+            value: val,
             parent: props.parent,
-            brands: null,
-            bodyTypes: null,
-            oldValue: Object.assign({}, props.parent.state.value)
+            setBrand: false,
+            setTypeOfBody: false
         };
         return _this;
     }
 
-    _createClass(CarEdit, [{
-        key: 'cancel',
-        value: function cancel() {
-            this.state.parent.setState({ value: this.state.oldValue, current_state: 0 });
+    _createClass(CarCreate, [{
+        key: 'exit',
+        value: function exit() {
+            this.state.parent.setState({ isLoaded: false, create: false });
         }
     }, {
         key: 'save',
         value: function save() {
             var value = this.state.value;
-            var oldValue = this.state.oldValue;
             var current = this;
 
             var data = {
-                "id": value.id,
                 "brandId": value.brandId,
                 "model": value.model,
                 "bodyTypeId": value.bodyTypeId,
@@ -53,20 +54,20 @@ export var CarEdit = function (_React$Component) {
                 "photoBase64": value.photoBase64
             };
 
-            if (value.photoBase64 != oldValue.photoBase64 && value.photoBase64 != "" && value.photoBase64 != null) {
+            if (value.photoBase64 != "" && value.photoBase64 != null) {
                 $.ajax({
                     url: 'api/Cars/CheckOnExistWithTheSameParametrs?id=' + value.id + '&brandId=' + value.brandId + '&model=' + value.model + '&bodyTypeId=' + value.bodyTypeId + '&seatsCount=' + value.seatsCount
                 }).done(function (isExist) {
                     if (!isExist) {
                         $.ajax({
-                            type: 'PUT',
-                            url: 'api/Cars/Update',
+                            type: 'POST',
+                            url: 'api/Cars/Create',
                             contentType: 'application/json',
                             data: JSON.stringify(data)
                         }).done(function (data) {
                             alert('SUCCESS');
 
-                            current.reloadOldValue();
+                            current.exit();
                         }).fail(function (msg) {
                             alert('FAIL');
                         });
@@ -77,24 +78,18 @@ export var CarEdit = function (_React$Component) {
             } else {
 
                 $.ajax({
-                    type: 'PUT',
-                    url: 'api/Cars/Update',
+                    type: 'POST',
+                    url: 'api/Cars/Create',
                     contentType: 'application/json',
                     data: JSON.stringify(data)
                 }).done(function (data) {
                     alert('SUCCESS');
 
-                    current.reloadOldValue();
+                    current.exit();
                 }).fail(function (msg) {
                     alert('FAIL');
                 });
             }
-        }
-    }, {
-        key: 'reloadOldValue',
-        value: function reloadOldValue() {
-
-            this.setState({ oldValue: Object.assign({}, this.state.value) });
         }
     }, {
         key: 'componentDidMount',
@@ -108,7 +103,20 @@ export var CarEdit = function (_React$Component) {
             var _this2 = this;
 
             var car = this.state.value;
-            if (this.state.brands != null && this.state.bodyTypes != null) {
+
+            if (this.state.brands != null && !this.state.setBrand) {
+                var value = this.state.value;
+                value.brandId = this.state.brands[0].id;
+                this.setState({ value: value, setBrand: true });
+            }
+
+            if (this.state.bodyTypes != null && !this.state.setTypeOfBody) {
+                var _value = this.state.value;
+                _value.bodyTypeId = this.state.bodyTypes[0].id;
+                this.setState({ value: _value, setTypeOfBody: true });
+            }
+
+            if (this.state.brands != null && this.state.bodyTypes != null && this.state.setBrand && this.state.setTypeOfBody) {
 
                 var brand_options = this.state.brands.map(function (item) {
                     return React.createElement(
@@ -126,10 +134,10 @@ export var CarEdit = function (_React$Component) {
                     );
                 });
 
-                var image = void 0;
-
-                if (car.photoBase64 == null || car.photoBase64 == "") {
-                    image = React.createElement(
+                return React.createElement(
+                    'div',
+                    { id: car.id, className: 'car carhead' },
+                    React.createElement(
                         'div',
                         { className: 'photowrapper' },
                         React.createElement('input', { className: 'uploader', ref: function ref(fileInput) {
@@ -143,57 +151,35 @@ export var CarEdit = function (_React$Component) {
                                 return Common.removePhoto(e, _this2);
                             } }),
                         React.createElement('img', { title: '\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0444\u043E\u0442\u043E', className: 'addphoto', src: '/images/add photo.png', onClick: this.triggerInputFile })
-                    );
-                } else {
-                    image = React.createElement(
-                        'div',
-                        { className: 'photowrapper' },
-                        React.createElement('input', { className: 'uploader', ref: function ref(fileInput) {
-                                return _this2.fileInput = fileInput;
-                            }, type: 'file', onChange: function onChange(e) {
-                                return Common.fileAdded(e, _this2);
-                            } }),
-                        React.createElement('img', { className: 'withphoto', src: car.photoBase64, height: '100', width: '100' }),
-                        ';',
-                        React.createElement('img', { title: '\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0444\u043E\u0442\u043E', className: 'removephoto', src: '/images/cross.png', onClick: function onClick(e) {
-                                return Common.removePhoto(e, _this2);
-                            } }),
-                        React.createElement('img', { title: '\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0444\u043E\u0442\u043E', className: 'addphoto', src: '/images/add photo.png', onClick: this.triggerInputFile })
-                    );
-                }
-
-                return React.createElement(
-                    'div',
-                    { id: car.id, className: 'car carhead' },
-                    image,
+                    ),
                     React.createElement(
                         'div',
                         { className: 'cartext' },
                         React.createElement(
                             'select',
-                            { className: 'editorcreate', value: car.brandId, onChange: function onChange(e) {
+                            { className: 'editorcreate', onChange: function onChange(e) {
                                     return Common.handleChangeBrandSelect(e, _this2);
                                 } },
                             brand_options
                         ),
                         React.createElement('br', null),
-                        React.createElement('input', { className: 'inputline editorcreate', placeholder: '\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043C\u043E\u0434\u0435\u043B\u0438...', value: car.model, required: '', onChange: function onChange(e) {
+                        React.createElement('input', { className: 'inputline editorcreate', placeholder: '\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043C\u043E\u0434\u0435\u043B\u0438...', required: '', onChange: function onChange(e) {
                                 return Common.handleChangeModel(e, _this2);
                             } }),
                         React.createElement('br', null),
                         React.createElement(
                             'select',
-                            { className: 'editorcreate', value: car.bodyTypeId, onChange: function onChange(e) {
+                            { className: 'editorcreate', onChange: function onChange(e) {
                                     return Common.handleChangeBodyTypeSelect(e, _this2);
                                 } },
                             bodyTypes_options
                         ),
                         React.createElement('br', null),
-                        React.createElement('input', { className: 'inputline editorcreate', placeholder: '\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0441\u0438\u0434\u0435\u043D\u0438\u0439 \u0432 \u0441\u0430\u043B\u043E\u043D\u0435...', value: car.seatsCount, required: '', onChange: function onChange(e) {
+                        React.createElement('input', { className: 'inputline editorcreate', placeholder: '\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0441\u0438\u0434\u0435\u043D\u0438\u0439 \u0432 \u0441\u0430\u043B\u043E\u043D\u0435...', required: '', onChange: function onChange(e) {
                                 return Common.handleChangeSeats(e, _this2);
                             } }),
                         React.createElement('br', null),
-                        React.createElement('input', { className: 'inputline editorcreate', placeholder: '\u0421\u0441\u044B\u043B\u043A\u0430... (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)', value: car.url, onChange: function onChange(e) {
+                        React.createElement('input', { className: 'inputline editorcreate', placeholder: '\u0421\u0441\u044B\u043B\u043A\u0430... (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)', onChange: function onChange(e) {
                                 return Common.handleChangeUrl(e, _this2);
                             } }),
                         React.createElement('br', null)
@@ -202,13 +188,10 @@ export var CarEdit = function (_React$Component) {
                         'div',
                         null,
                         React.createElement('img', { title: '\u041E\u0442\u043C\u0435\u043D\u0430', className: 'caricons', src: '/images/cross.png', onClick: function onClick() {
-                                return _this2.cancel();
+                                return _this2.exit();
                             } }),
                         React.createElement('img', { title: '\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C', className: 'caricons', src: '/images/save.png', onClick: function onClick() {
                                 return _this2.save();
-                            } }),
-                        React.createElement('img', { title: '\u0423\u0434\u0430\u043B\u0438\u0442\u044C', className: 'caricons', src: '/images/rubbish.png', onClick: function onClick() {
-                                return _this2.delete();
                             } })
                     )
                 );
@@ -218,5 +201,5 @@ export var CarEdit = function (_React$Component) {
         }
     }]);
 
-    return CarEdit;
+    return CarCreate;
 }(React.Component);

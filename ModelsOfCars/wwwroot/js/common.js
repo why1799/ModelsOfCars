@@ -49,3 +49,27 @@ export function fileAdded(event, car) {
         event.target.value = "";
     }
 }
+
+export function getBrands(car) {
+    $.ajax({
+        url: "api/Brands/GetAll",
+        success: function (data) {
+
+            car.setState(() => {
+                return { brands: data }
+            });
+        }
+    });
+}
+
+export function getBodyTypes(car) {
+    $.ajax({
+        url: "api/BodyType/GetAll",
+        success: function (data) {
+
+            car.setState(() => {
+                return { bodyTypes: data }
+            });
+        }
+    });
+}

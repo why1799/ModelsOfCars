@@ -6,52 +6,25 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var size = 10;
-
 import { CarItem } from '/js/car_item.js';
 
-var CarsList = function (_React$Component) {
+export var CarsList = function (_React$Component) {
     _inherits(CarsList, _React$Component);
 
     function CarsList(props) {
         _classCallCheck(this, CarsList);
 
-        var _this = _possibleConstructorReturn(this, (CarsList.__proto__ || Object.getPrototypeOf(CarsList)).call(this, props));
-
-        _this.state = {
-            error: null,
-            isLoaded: false,
-            page: 0,
-            response: [],
-            pageInfo: null
-        };
-        return _this;
+        return _possibleConstructorReturn(this, (CarsList.__proto__ || Object.getPrototypeOf(CarsList)).call(this, props));
     }
 
     _createClass(CarsList, [{
-        key: "componentDidMount",
-        value: function componentDidMount() {
-
-            var current = this;
-
-            $.ajax({
-                url: "api/Cars/GetAll?Size=" + size + "&Current=" + this.state.page,
-                success: function success(data) {
-                    current.setState(function () {
-                        return { isLoaded: true, response: data.response, pageInfo: data.pageInfo };
-                    });
-                }
-            });
-        }
-    }, {
         key: "render",
         value: function render() {
-            var _state = this.state,
-                error = _state.error,
-                isLoaded = _state.isLoaded,
-                page = _state.page,
-                response = _state.response,
-                pageInfo = _state.pageInfo;
+            var _props = this.props,
+                error = _props.error,
+                isLoaded = _props.isLoaded,
+                response = _props.response,
+                page = _props.page;
 
             if (error) {
                 return React.createElement(
@@ -60,14 +33,16 @@ var CarsList = function (_React$Component) {
                     "\u041E\u0448\u0438\u0431\u043A\u0430: ",
                     error.message
                 );
-            } else if (!isLoaded) {
-                //Добавить крутящийся кружок
+            } else if (!isLoaded || page.current >= page.totalPages) {
+                return React.createElement("img", { src: "/images/loader.gif", className: "center", width: "110" });
+            } else if (page.totalPages == 0) {
                 return React.createElement(
-                    "div",
+                    "h2",
                     null,
-                    "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430..."
+                    "\u0423 \u0412\u0430\u0441 \u043D\u0435\u0442 \u0435\u0449\u0451 \u043F\u043E\u0435\u0437\u0434\u043E\u043A! \u0421\u043A\u043E\u0440\u0435\u0435 \u0434\u043E\u0431\u0430\u0432\u044C\u0442\u0435!"
                 );
             } else {
+
                 return response.map(function (item) {
                     return React.createElement(CarItem, { value: item, key: item.id, current_state: 0 });
                 });
@@ -77,6 +52,3 @@ var CarsList = function (_React$Component) {
 
     return CarsList;
 }(React.Component);
-
-var domContainer = document.querySelector('#cars_list');
-ReactDOM.render(React.createElement(CarsList, null), domContainer);

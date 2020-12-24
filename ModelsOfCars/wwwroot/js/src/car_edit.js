@@ -80,8 +80,8 @@ export class CarEdit extends React.Component {
     }
 
     componentDidMount() {
-        getBrands(this);
-        getBodyTypes(this)
+        Common.getBrands(this);
+        Common.getBodyTypes(this)
     }
 
     
@@ -147,28 +147,4 @@ export class CarEdit extends React.Component {
             );
         }
     }
-}
-
-function getBrands(car) {
-    $.ajax({
-        url: "api/Brands/GetAll",
-        success: function (data) {
-
-            car.setState(() => {
-                return { brands: data }
-            });
-        }
-    });
-}
-
-function getBodyTypes(car) {
-    $.ajax({
-        url: "api/BodyType/GetAll",
-        success: function (data) {
-
-            car.setState(() => {
-                return { bodyTypes: data }
-            });
-        }
-    });
 }
