@@ -6,6 +6,7 @@ export class CarItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            root: props.root,
             value: props.value,
             current_state: props.current_state // 0 - info, 1 - edit, 2 - load
         };
@@ -16,12 +17,12 @@ export class CarItem extends React.Component {
 
         if (current_state === 0) {
             return (
-                <CarInfo parent={this} />
+                <CarInfo root={this.state.root} parent={this} />
             );
         }
         if (current_state === 1) {
             return (
-                <CarEdit parent={this} />
+                <CarEdit root={this.state.root} parent={this} />
             );
         }
         else if(current_state === 2) {

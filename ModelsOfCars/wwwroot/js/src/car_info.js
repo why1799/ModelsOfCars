@@ -2,6 +2,7 @@
     constructor(props) {
         super(props);
         this.state = {
+            root: props.root,
             value: props.parent.state.value,
             parent: props.parent
         };
@@ -26,7 +27,18 @@
     }
 
     deleteCar() {
-        alert('not implemented');
+
+        const root = this.state.root;
+
+        $.ajax({
+            type: 'Delete',
+            url: 'api/Cars/Delete?id=' + this.state.value.id,
+        }).done(function (data) {
+            root.setState({ isLoaded: false });
+            alert('Удаление прошло успешно');
+        }).fail(function (msg) {
+            alert('Удалить не удалось!\n' + msg.responseText);
+        });
     }
 
     render() {

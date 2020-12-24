@@ -19,6 +19,7 @@ export var CarItem = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (CarItem.__proto__ || Object.getPrototypeOf(CarItem)).call(this, props));
 
         _this.state = {
+            root: props.root,
             value: props.value,
             current_state: props.current_state // 0 - info, 1 - edit, 2 - load
         };
@@ -31,10 +32,10 @@ export var CarItem = function (_React$Component) {
             var current_state = this.state.current_state;
 
             if (current_state === 0) {
-                return React.createElement(CarInfo, { parent: this });
+                return React.createElement(CarInfo, { root: this.state.root, parent: this });
             }
             if (current_state === 1) {
-                return React.createElement(CarEdit, { parent: this });
+                return React.createElement(CarEdit, { root: this.state.root, parent: this });
             } else if (current_state === 2) {
                 return React.createElement(CarLoad, { parent: this });
             }

@@ -45,13 +45,22 @@
         }
         let dots = <li className="page">...</li>;
         let last = <li className="page" onClick={() => this.changePage(page.current + 1)}>&#129046;</li>;
-        if (page.current + 1 == page.totalPages) {
+        if (page.current + 1 >= page.totalPages) {
             last = <li className="page">&#129046;</li>;
         }
 
-
-        if (page.totalPages <= 7) {
-            var lis = this.createlifromto(1, page.totalPages, page.current + 1);
+        if (page.totalPages == 0) {
+            let lis = this.createlifromto(1, 1, 1);
+            return (
+                <ul className="paging">
+                    {first}
+                    {lis}
+                    {last}
+                </ul>
+            );
+        }
+        else if (page.totalPages <= 7) {
+            let lis = this.createlifromto(1, page.totalPages, page.current + 1);
             return (
                 <ul className="paging">
                     {first}
@@ -62,8 +71,8 @@
         }
         else {
             if (page.current + 1 <= 5) {
-                var from1to5 = this.createlifromto(1, 5, page.current + 1);
-                var lastp = this.createlifromto(page.totalPages, page.totalPages)
+                let from1to5 = this.createlifromto(1, 5, page.current + 1);
+                let lastp = this.createlifromto(page.totalPages, page.totalPages)
 
                 return (
                     <ul className="paging">
@@ -76,8 +85,8 @@
                 );
             }
             else if (page.current + 1 > page.totalPages - 5) {
-                var firstp = this.createlifromto(1, 1, page.current + 1);
-                var lastp = this.createlifromto(page.totalPages - 4, page.totalPages, page.current + 1);
+                let firstp = this.createlifromto(1, 1, page.current + 1);
+                let lastp = this.createlifromto(page.totalPages - 4, page.totalPages, page.current + 1);
 
 
                 return (
@@ -91,9 +100,9 @@
                 );
             }
             else {
-                var firstp = this.createlifromto(1, 1, page.current + 1);
-                var middlep = this.createlifromto(page.current, page.current + 2, page.current + 1);
-                var lastp = this.createlifromto(page.totalPages, page.totalPages, page.current + 1);
+                let firstp = this.createlifromto(1, 1, page.current + 1);
+                let middlep = this.createlifromto(page.current, page.current + 2, page.current + 1);
+                let lastp = this.createlifromto(page.totalPages, page.totalPages, page.current + 1);
 
 
                 return (

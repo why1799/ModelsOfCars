@@ -14,13 +14,19 @@ export var CarsList = function (_React$Component) {
     function CarsList(props) {
         _classCallCheck(this, CarsList);
 
-        return _possibleConstructorReturn(this, (CarsList.__proto__ || Object.getPrototypeOf(CarsList)).call(this, props));
+        var _this = _possibleConstructorReturn(this, (CarsList.__proto__ || Object.getPrototypeOf(CarsList)).call(this, props));
+
+        _this.state = {
+            root: props.root
+        };
+        return _this;
     }
 
     _createClass(CarsList, [{
         key: "render",
         value: function render() {
             var _props = this.props,
+                root = _props.root,
                 error = _props.error,
                 isLoaded = _props.isLoaded,
                 response = _props.response,
@@ -34,17 +40,18 @@ export var CarsList = function (_React$Component) {
                     error.message
                 );
             } else if (!isLoaded || page.current >= page.totalPages) {
+                if (page != null && page.totalPages == 0) {
+                    return React.createElement(
+                        "h2",
+                        null,
+                        "\u0423 \u0412\u0430\u0441 \u043D\u0435\u0442 \u0435\u0449\u0451 \u043C\u0430\u0448\u0438\u043D! \u0421\u043A\u043E\u0440\u0435\u0435 \u0434\u043E\u0431\u0430\u0432\u044C\u0442\u0435!"
+                    );
+                }
                 return React.createElement("img", { src: "/images/loader.gif", className: "center", width: "110" });
-            } else if (page.totalPages == 0) {
-                return React.createElement(
-                    "h2",
-                    null,
-                    "\u0423 \u0412\u0430\u0441 \u043D\u0435\u0442 \u0435\u0449\u0451 \u043F\u043E\u0435\u0437\u0434\u043E\u043A! \u0421\u043A\u043E\u0440\u0435\u0435 \u0434\u043E\u0431\u0430\u0432\u044C\u0442\u0435!"
-                );
             } else {
 
                 return response.map(function (item) {
-                    return React.createElement(CarItem, { value: item, key: item.id, current_state: 0 });
+                    return React.createElement(CarItem, { root: root, value: item, key: item.id, current_state: 0 });
                 });
             }
         }

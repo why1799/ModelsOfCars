@@ -154,7 +154,7 @@ WHERE cars.id = '{id}';";
                 }
             }
             
-            if(!string.IsNullOrEmpty(car.PhotoBase64))
+            if(!string.IsNullOrEmpty(car?.PhotoBase64))
             {
                 car.PhotoBase64 = $"data:image/jpeg;base64,{car.PhotoBase64}";
             }
@@ -191,10 +191,52 @@ WHERE id = '{car.Id}';";
 
         #region DELETE
 
-        public Task<int> Delete(Guid id)
+        public async Task<int> Delete(Guid id)
         {
-            throw new NotImplementedException();
+            var found = false;
+
+            using var connection = new NpgsqlConnection(_dbConnection.ToString());
+
+            await connection.OpenAsync().ConfigureAwait(false);
+
+            using var command = connection.CreateCommand();
+            command.CommandText = @$"
+SELECT COUNT(*)
+FROM cars
+WHERE id = '{id}';";
+
+            using (NpgsqlDataReader reader = command.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+                    while (await reader.ReadAsync().ConfigureAwait(false))
+                    {
+                        found = int.Parse(reader.GetValue(0).ToString()) != 0;
+                    }
+                }
+
+                if (!found)
+                {
+                    throw new ArgumentException("Такой записи в базе не существует.");
+                }
+            }
+
+            command.CommandText = @$"
+DELETE 
+FROM cars
+WHERE id = '{id}';";
+
+
+            var rows = await command.ExecuteNonQueryAsync().ConfigureAwait(false);
+
+            if (rows == 0)
+            {
+                throw new ArgumentException("Такой записи в базе не существует.");
+            }
+
+            return rows;
         }
+
 
         #endregion
 

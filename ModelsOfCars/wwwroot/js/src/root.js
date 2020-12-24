@@ -1,4 +1,4 @@
-﻿const size = 2;
+﻿const size = 10;
 
 import { CarsList } from '/js/cars_list.js';
 import { CarCreate } from '/js/car_create.js';
@@ -23,9 +23,17 @@ class Root extends React.Component {
         $.ajax({
             url: "api/Cars/GetAll?Size=" + size + "&Current=" + this.state.page,
             success: function (data) {
-                current.setState(() => {
-                    return { isLoaded: true, response: data.response, pageInfo: data.pageInfo }
-                });
+
+                if (data.pageInfo.current >= data.pageInfo.totalPages && data.pageInfo.totalPages != 0) {
+                    current.setState(() => {
+                        return { page: data.pageInfo.totalPages - 1 }
+                    });
+                }
+                else {
+                    current.setState(() => {
+                        return { isLoaded: true, response: data.response, pageInfo: data.pageInfo }
+                    });
+                }
             }
         });
     }
@@ -45,7 +53,7 @@ class Root extends React.Component {
             <div className="root">
                 <Heading parent={this} />
                 {creation}
-                <CarsList  isLoaded={this.state.isLoaded} response={this.state.response} page={this.state.pageInfo} />
+                <CarsList root={this} isLoaded={this.state.isLoaded} response={this.state.response} page={this.state.pageInfo} />
                 <Paging parent={this} page={this.state.pageInfo} />
              </div>
             );

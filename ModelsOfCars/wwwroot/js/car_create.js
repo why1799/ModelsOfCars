@@ -45,6 +45,21 @@ export var CarCreate = function (_React$Component) {
             var value = this.state.value;
             var current = this;
 
+            if (value.model == "" || value.model == null || value.model.length > 1000) {
+                alert('Произошла ошибка. Поле модели обязательно для заполнение. Поле не должно превышать более 1000 символов.');
+                return;
+            }
+
+            if (!(value.seatsCount >= 1 && value.seatsCount <= 12)) {
+                alert('Произошла ошибка. Количество сидений должно быть от 1 до 12.');
+                return;
+            }
+
+            if (value.url != null && value.url > 1000) {
+                alert('Произошла ошибка. Ссылка не должна превышать более 1000 символов.');
+                return;
+            }
+
             var data = {
                 "brandId": value.brandId,
                 "model": value.model,
@@ -56,7 +71,7 @@ export var CarCreate = function (_React$Component) {
 
             if (value.photoBase64 != "" && value.photoBase64 != null) {
                 $.ajax({
-                    url: 'api/Cars/CheckOnExistWithTheSameParametrs?id=' + value.id + '&brandId=' + value.brandId + '&model=' + value.model + '&bodyTypeId=' + value.bodyTypeId + '&seatsCount=' + value.seatsCount
+                    url: 'api/Cars/CheckOnExistWithTheSameParametrs?brandId=' + value.brandId + '&model=' + value.model + '&bodyTypeId=' + value.bodyTypeId + '&seatsCount=' + value.seatsCount
                 }).done(function (isExist) {
                     if (!isExist) {
                         $.ajax({
@@ -65,11 +80,10 @@ export var CarCreate = function (_React$Component) {
                             contentType: 'application/json',
                             data: JSON.stringify(data)
                         }).done(function (data) {
-                            alert('SUCCESS');
-
                             current.exit();
+                            alert('Машина успешно сохранена');
                         }).fail(function (msg) {
-                            alert('FAIL');
+                            alert('Сохранить не удалось!\n' + msg.responseText);
                         });
                     } else {
                         alert('В базе уже есть с такими же данными');
@@ -83,11 +97,10 @@ export var CarCreate = function (_React$Component) {
                     contentType: 'application/json',
                     data: JSON.stringify(data)
                 }).done(function (data) {
-                    alert('SUCCESS');
-
                     current.exit();
+                    alert('Машина успешно сохранена');
                 }).fail(function (msg) {
-                    alert('FAIL');
+                    alert('Сохранить не удалось!\n' + msg.responseText);
                 });
             }
         }
@@ -134,10 +147,10 @@ export var CarCreate = function (_React$Component) {
                     );
                 });
 
-                return React.createElement(
-                    'div',
-                    { id: car.id, className: 'car carhead' },
-                    React.createElement(
+                var image = void 0;
+
+                if (car.photoBase64 == null || car.photoBase64 == "") {
+                    image = React.createElement(
                         'div',
                         { className: 'photowrapper' },
                         React.createElement('input', { className: 'uploader', ref: function ref(fileInput) {
@@ -151,7 +164,29 @@ export var CarCreate = function (_React$Component) {
                                 return Common.removePhoto(e, _this2);
                             } }),
                         React.createElement('img', { title: '\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0444\u043E\u0442\u043E', className: 'addphoto', src: '/images/add photo.png', onClick: this.triggerInputFile })
-                    ),
+                    );
+                } else {
+                    image = React.createElement(
+                        'div',
+                        { className: 'photowrapper' },
+                        React.createElement('input', { className: 'uploader', ref: function ref(fileInput) {
+                                return _this2.fileInput = fileInput;
+                            }, type: 'file', onChange: function onChange(e) {
+                                return Common.fileAdded(e, _this2);
+                            } }),
+                        React.createElement('img', { className: 'withphoto', src: car.photoBase64, height: '100', width: '100' }),
+                        ';',
+                        React.createElement('img', { title: '\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0444\u043E\u0442\u043E', className: 'removephoto', src: '/images/cross.png', onClick: function onClick(e) {
+                                return Common.removePhoto(e, _this2);
+                            } }),
+                        React.createElement('img', { title: '\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0444\u043E\u0442\u043E', className: 'addphoto', src: '/images/add photo.png', onClick: this.triggerInputFile })
+                    );
+                }
+
+                return React.createElement(
+                    'div',
+                    { id: car.id, className: 'car carhead' },
+                    image,
                     React.createElement(
                         'div',
                         { className: 'cartext' },

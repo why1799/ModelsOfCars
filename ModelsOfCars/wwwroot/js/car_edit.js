@@ -22,6 +22,7 @@ export var CarEdit = function (_React$Component) {
         };
 
         _this.state = {
+            root: props.root,
             value: props.parent.state.value,
             parent: props.parent,
             brands: null,
@@ -37,11 +38,42 @@ export var CarEdit = function (_React$Component) {
             this.state.parent.setState({ value: this.state.oldValue, current_state: 0 });
         }
     }, {
+        key: 'deleteCar',
+        value: function deleteCar() {
+
+            var root = this.state.root;
+
+            $.ajax({
+                type: 'Delete',
+                url: 'api/Cars/Delete?id=' + this.state.value.id
+            }).done(function (data) {
+                root.setState({ isLoaded: false });
+                alert('Удаление прошло успешно');
+            }).fail(function (msg) {
+                alert('Удалить не удалось!\n' + msg.responseText);
+            });
+        }
+    }, {
         key: 'save',
         value: function save() {
             var value = this.state.value;
             var oldValue = this.state.oldValue;
             var current = this;
+
+            if (value.model == "" || value.model == null || value.model.length > 1000) {
+                alert('Произошла ошибка. Поле модели обязательно для заполнение. Поле не должно превышать более 1000 символов.');
+                return;
+            }
+
+            if (!(value.seatsCount >= 1 && value.seatsCount <= 12)) {
+                alert('Произошла ошибка. Количество сидений должно быть от 1 до 12.');
+                return;
+            }
+
+            if (value.url != null && value.url > 1000) {
+                alert('Произошла ошибка. Ссылка не должна превышать более 1000 символов.');
+                return;
+            }
 
             var data = {
                 "id": value.id,
@@ -64,14 +96,13 @@ export var CarEdit = function (_React$Component) {
                             contentType: 'application/json',
                             data: JSON.stringify(data)
                         }).done(function (data) {
-                            alert('SUCCESS');
-
                             current.reloadOldValue();
+                            alert('Машина успешно сохранена');
                         }).fail(function (msg) {
-                            alert('FAIL');
+                            alert('Сохранить не удалось!\n' + msg.responseText);
                         });
                     } else {
-                        alert('В базе уже есть с такими же данными');
+                        alert('В базе уже есть машина с такими же данными');
                     }
                 });
             } else {
@@ -82,11 +113,10 @@ export var CarEdit = function (_React$Component) {
                     contentType: 'application/json',
                     data: JSON.stringify(data)
                 }).done(function (data) {
-                    alert('SUCCESS');
-
                     current.reloadOldValue();
+                    alert('Машина успешно сохранена');
                 }).fail(function (msg) {
-                    alert('FAIL');
+                    alert('Сохранить не удалось!\n' + msg.responseText);
                 });
             }
         }
@@ -208,7 +238,7 @@ export var CarEdit = function (_React$Component) {
                                 return _this2.save();
                             } }),
                         React.createElement('img', { title: '\u0423\u0434\u0430\u043B\u0438\u0442\u044C', className: 'caricons', src: '/images/rubbish.png', onClick: function onClick() {
-                                return _this2.delete();
+                                return _this2.deleteCar();
                             } })
                     )
                 );

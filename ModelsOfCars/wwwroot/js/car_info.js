@@ -15,6 +15,7 @@ export var CarInfo = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (CarInfo.__proto__ || Object.getPrototypeOf(CarInfo)).call(this, props));
 
         _this.state = {
+            root: props.root,
             value: props.parent.state.value,
             parent: props.parent
         };
@@ -22,7 +23,7 @@ export var CarInfo = function (_React$Component) {
     }
 
     _createClass(CarInfo, [{
-        key: "editCar",
+        key: 'editCar',
         value: function editCar() {
 
             var parent = this.state.parent;
@@ -41,57 +42,68 @@ export var CarInfo = function (_React$Component) {
             });
         }
     }, {
-        key: "deleteCar",
+        key: 'deleteCar',
         value: function deleteCar() {
-            alert('not implemented');
+
+            var root = this.state.root;
+
+            $.ajax({
+                type: 'Delete',
+                url: 'api/Cars/Delete?id=' + this.state.value.id
+            }).done(function (data) {
+                root.setState({ isLoaded: false });
+                alert('Удаление прошло успешно');
+            }).fail(function (msg) {
+                alert('Удалить не удалось!\n' + msg.responseText);
+            });
         }
     }, {
-        key: "render",
+        key: 'render',
         value: function render() {
             var _this2 = this;
 
             var car = this.state.value;
 
             return React.createElement(
-                "div",
-                { id: car.id, className: "car carhead" },
+                'div',
+                { id: car.id, className: 'car carhead' },
                 React.createElement(
-                    "div",
-                    { className: "cartext" },
+                    'div',
+                    { className: 'cartext' },
                     React.createElement(
-                        "label",
-                        { className: "carname" },
+                        'label',
+                        { className: 'carname' },
                         car.brandName
                     ),
-                    React.createElement("br", null),
+                    React.createElement('br', null),
                     React.createElement(
-                        "label",
-                        { className: "cardesc" },
-                        "\u041C\u043E\u0434\u0435\u043B\u044C: ",
+                        'label',
+                        { className: 'cardesc' },
+                        '\u041C\u043E\u0434\u0435\u043B\u044C: ',
                         car.model
                     ),
-                    React.createElement("br", null),
+                    React.createElement('br', null),
                     React.createElement(
-                        "label",
-                        { className: "cardesc" },
-                        "\u0422\u0438\u043F \u043A\u0443\u0437\u043E\u0432\u0430: ",
+                        'label',
+                        { className: 'cardesc' },
+                        '\u0422\u0438\u043F \u043A\u0443\u0437\u043E\u0432\u0430: ',
                         car.bodyTypeName
                     ),
-                    React.createElement("br", null),
+                    React.createElement('br', null),
                     React.createElement(
-                        "label",
-                        { className: "cardesc" },
-                        "\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u043C\u0435\u0441\u0442: ",
+                        'label',
+                        { className: 'cardesc' },
+                        '\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u043C\u0435\u0441\u0442: ',
                         car.seatsCount
                     )
                 ),
                 React.createElement(
-                    "div",
-                    { className: "iconsintriphead" },
-                    React.createElement("img", { title: "\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C", className: "caricons", src: "/images/edit.png", onClick: function onClick() {
+                    'div',
+                    { className: 'iconsintriphead' },
+                    React.createElement('img', { title: '\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C', className: 'caricons', src: '/images/edit.png', onClick: function onClick() {
                             return _this2.editCar();
                         } }),
-                    React.createElement("img", { title: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C", className: "caricons", src: "/images/rubbish.png", onClick: function onClick() {
+                    React.createElement('img', { title: '\u0423\u0434\u0430\u043B\u0438\u0442\u044C', className: 'caricons', src: '/images/rubbish.png', onClick: function onClick() {
                             return _this2.deleteCar();
                         } })
                 )

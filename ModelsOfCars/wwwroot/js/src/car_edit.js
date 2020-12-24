@@ -5,6 +5,7 @@ export class CarEdit extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            root: props.root,
             value: props.parent.state.value,
             parent: props.parent,
             brands: null,
@@ -17,10 +18,41 @@ export class CarEdit extends React.Component {
         this.state.parent.setState({ value: this.state.oldValue, current_state: 0  });
     }
 
+    deleteCar() {
+
+        const root = this.state.root;
+
+        $.ajax({
+            type: 'Delete',
+            url: 'api/Cars/Delete?id=' + this.state.value.id,
+        }).done(function (data) {
+            root.setState({ isLoaded: false });
+            alert('Удаление прошло успешно');
+
+        }).fail(function (msg) {
+            alert('Удалить не удалось!\n' + msg.responseText);
+        });
+    }
+
     save() {
         const value = this.state.value;
         var oldValue = this.state.oldValue;
         let current = this;
+
+        if (value.model == "" || value.model == null || value.model.length > 1000) {
+            alert('Произошла ошибка. Поле модели обязательно для заполнение. Поле не должно превышать более 1000 символов.');
+            return;
+        }
+
+        if (!(value.seatsCount >= 1 && value.seatsCount <= 12)) {
+            alert('Произошла ошибка. Количество сидений должно быть от 1 до 12.');
+            return;
+        }
+
+        if (value.url != null && value.url > 1000) {
+            alert('Произошла ошибка. Ссылка не должна превышать более 1000 символов.');
+            return;
+        }
 
         let data = {
             "id": value.id,
@@ -43,16 +75,14 @@ export class CarEdit extends React.Component {
                         contentType: 'application/json',
                         data: JSON.stringify(data),
                     }).done(function (data) {
-                        alert('SUCCESS');
-
                         current.reloadOldValue();
-
+                        alert('Машина успешно сохранена');
                     }).fail(function (msg) {
-                        alert('FAIL');
+                        alert('Сохранить не удалось!\n' + msg.responseText);
                     });
                 }
                 else {
-                    alert('В базе уже есть с такими же данными');
+                    alert('В базе уже есть машина с такими же данными');
                 }
             });
         }
@@ -64,12 +94,10 @@ export class CarEdit extends React.Component {
                 contentType: 'application/json',
                 data: JSON.stringify(data),
             }).done(function (data) {
-                alert('SUCCESS');
-
                 current.reloadOldValue();
-                
+                alert('Машина успешно сохранена');
             }).fail(function (msg) {
-                alert('FAIL');
+                alert('Сохранить не удалось!\n' + msg.responseText);
             });
         }
     }
@@ -136,7 +164,7 @@ export class CarEdit extends React.Component {
                     <div>
                         <img title="Отмена" className="caricons" src="/images/cross.png" onClick={() => this.cancel()} />
                         <img title="Сохранить" className="caricons" src="/images/save.png" onClick={() => this.save()} />
-                        <img title="Удалить" className="caricons" src="/images/rubbish.png" onClick={() => this.delete()} />
+                        <img title="Удалить" className="caricons" src="/images/rubbish.png" onClick={() => this.deleteCar()} />
                     </div>
                 </div>
             );

@@ -92,7 +92,7 @@ export var Paging = function (_React$Component) {
                     } },
                 "\uD83E\uDC16"
             );
-            if (page.current + 1 == page.totalPages) {
+            if (page.current + 1 >= page.totalPages) {
                 last = React.createElement(
                     "li",
                     { className: "page" },
@@ -100,13 +100,22 @@ export var Paging = function (_React$Component) {
                 );
             }
 
-            if (page.totalPages <= 7) {
-                var lis = this.createlifromto(1, page.totalPages, page.current + 1);
+            if (page.totalPages == 0) {
+                var lis = this.createlifromto(1, 1, 1);
                 return React.createElement(
                     "ul",
                     { className: "paging" },
                     first,
                     lis,
+                    last
+                );
+            } else if (page.totalPages <= 7) {
+                var _lis = this.createlifromto(1, page.totalPages, page.current + 1);
+                return React.createElement(
+                    "ul",
+                    { className: "paging" },
+                    first,
+                    _lis,
                     last
                 );
             } else {
@@ -125,7 +134,7 @@ export var Paging = function (_React$Component) {
                     );
                 } else if (page.current + 1 > page.totalPages - 5) {
                     var firstp = this.createlifromto(1, 1, page.current + 1);
-                    var lastp = this.createlifromto(page.totalPages - 4, page.totalPages, page.current + 1);
+                    var _lastp = this.createlifromto(page.totalPages - 4, page.totalPages, page.current + 1);
 
                     return React.createElement(
                         "ul",
@@ -133,23 +142,23 @@ export var Paging = function (_React$Component) {
                         first,
                         firstp,
                         dots,
-                        lastp,
+                        _lastp,
                         last
                     );
                 } else {
-                    var firstp = this.createlifromto(1, 1, page.current + 1);
+                    var _firstp = this.createlifromto(1, 1, page.current + 1);
                     var middlep = this.createlifromto(page.current, page.current + 2, page.current + 1);
-                    var lastp = this.createlifromto(page.totalPages, page.totalPages, page.current + 1);
+                    var _lastp2 = this.createlifromto(page.totalPages, page.totalPages, page.current + 1);
 
                     return React.createElement(
                         "ul",
                         { className: "paging" },
                         first,
-                        firstp,
+                        _firstp,
                         dots,
                         middlep,
                         dots,
-                        lastp,
+                        _lastp2,
                         last
                     );
                 }
